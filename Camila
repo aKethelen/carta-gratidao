@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Para Camila | Gratidão</title>
+<link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Lora:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+
+<style>
+    :root {
+        --bg-gradient: linear-gradient(135deg, #eaddca 0%, #f4ece2 50%, #d8c3a5 100%);
+        --accent: #8e735b;
+        --text: #3d342d;
+    }
+
+    body {
+        margin: 0;
+        padding: 0;
+        min-height: 100vh;
+        font-family: 'Lora', serif;
+        color: var(--text);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        overflow-x: hidden;
+        background: var(--bg-gradient);
+        background-size: 400% 400%;
+        animation: gradientBG 15s ease infinite;
+    }
+
+    @keyframes gradientBG {
+        0% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
+    }
+
+    /* FUNDO DE LUZES (BOKEH) */
+    .bokeh-container {
+        position: fixed;
+        width: 100%;
+        height: 100%;
+        top: 0; left: 0;
+        z-index: 0;
+        pointer-events: none;
+    }
+
+    .luz {
+        position: absolute;
+        background: rgba(255, 255, 255, 0.4);
+        border-radius: 50%;
+        filter: blur(8px);
+        animation: flutuarLuz var(--d) linear infinite;
+        opacity: 0;
+    }
+
+    @keyframes flutuarLuz {
+        0% { transform: translateY(110vh) scale(0.5); opacity: 0; }
+        20% { opacity: 0.6; }
+        80% { opacity: 0.6; }
+        100% { transform: translateY(-10vh) scale(1.2); opacity: 0; }
+    }
+
+    /* TELA DE ENTRADA */
+    .tela-inicial {
+        position: fixed;
+        inset: 0;
+        background: #fdfaf7;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        z-index: 100;
+        transition: transform 1s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.8s;
+    }
+
+    .envelope-icon {
+        width: 80px;
+        margin-bottom: 20px;
+        opacity: 0.7;
+    }
+
+    .btn-abrir {
+        padding: 18px 45px;
+        background: transparent;
+        border: 1.5px solid var(--accent);
+        color: var(--accent);
+        border-radius: 40px;
+        font-size: 1rem;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        cursor: pointer;
+        transition: 0.4s;
+        font-family: 'Lora', serif;
+    }
+
+    .btn-abrir:hover {
+        background: var(--accent);
+        color: white;
+        box-shadow: 0 10px 20px rgba(142, 115, 91, 0.2);
+    }
+
+    /* ESTRUTURA DA CARTA */
+    .container-carta {
+        max-width: 750px;
+        width: 90%;
+        margin: 50px auto;
+        opacity: 0;
+        transform: scale(0.95);
+        transition: all 1.2s ease;
+        z-index: 10;
+        display: none;
+    }
+
+    .papel {
+        background: #ffffff;
+        padding: 80px;
+        box-shadow: 0 30px 60px rgba(0,0,0,0.12);
+        border-radius: 4px;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .papel::before {
+        content: "";
+        position: absolute;
+        top: 0; left: 0; width: 100%; height: 6px;
+        background: var(--accent);
+    }
+
+    h1 {
+        font-family: 'Great Vibes', cursive;
+        font-size: 3rem;
+        font-weight: normal;
+        margin-bottom: 40px;
+        color: var(--accent);
+        text-align: center;
+    }
+
+    p {
+        line-height: 1.9;
+        margin-bottom: 25px;
+        font-size: 1.1rem;
+        text-align: justify;
+    }
+
+    .destaque { color: var(--accent); font-weight: 700; }
+
+    .assinatura {
+        margin-top: 60px;
+        font-family: 'Great Vibes', cursive;
+        font-size: 2.5rem;
+        text-align: right;
+        color: var(--accent);
+    }
+
+    /* INTERAÇÕES FINAIS */
+    .footer-actions {
+        margin-top: 50px;
+        text-align: center;
+        border-top: 1px dashed #eee;
+        padding-top: 30px;
+    }
+
+    .btn-capsula {
+        background: none;
+        border: 1px solid #ccc;
+        padding: 10px 25px;
+        margin: 5px;
+        border-radius: 25px;
+        cursor: pointer;
+        font-family: 'Lora', serif;
+        color: #777;
+        transition: 0.3s;
+    }
+
+    .btn-capsula:hover {
+        border-color: var(--accent);
+        color: var(--accent);
+    }
+
+    .mensagem-final {
+        margin-top: 25px;
+        min-height: 30px;
+        font-style: italic;
+        color: var(--accent);
+        transition: opacity 0.5s;
+    }
+
+    /* MOBILE */
+    @media (max-width: 600px) {
+        .papel { padding: 40px 25px; }
+        h1 { font-size: 2.2rem; }
+    }
+</style>
+</head>
+<body>
+
+<div class="bokeh-container" id="bokeh"></div>
+
+<div class="tela-inicial" id="intro">
+    <svg class="envelope-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
+        <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+        <polyline points="22,6 12,13 2,6"/>
+    </svg>
+    <button class="btn-abrir" onclick="abrirCarta()">"Clique para abrir a carta</button>
+</div>
+
+<div class="container-carta" id="carta">
+    <article class="papel">
+        <h1>Querida Camila,</h1>
+        
+        <p>Alguns anos são maiores que outros, e este pareceu durar uma eternidade de dias difíceis. Dizem que a psicologia é sobre entender a mente, mas este ano você fez algo mais: você me ajudou a caminhar por um território que eu já não reconhecia mais como meu.</p>
+
+        <p>Obrigada por ser meu <span class="destaque">farol</span> quando a neblina estava espessa demais e por me tratar não como um conjunto de sintomas, mas como uma história que merecia ser contada e ressignificada. Chegar ao fim deste ano é uma vitória que tem a sua escuta como alicerce.</p>
+
+        <p>Obrigada por entender que minha angústia nem sempre tinha nome ou explicação. Às vezes, o seu silêncio acolhedor ouvia o que eu mesma não conseguia formular, e você sempre me enxergou.</p>
+
+        <p>Lembro que em alguma sessão você disse que <span class="destaque">eu era eu</span>, e a “Alasca”, do livro, era outra pessoa, e que cada uma tem sua história. Apesar de muitas vezes me sentir como ela, perdida em um labirinto de sofrimento que parecia só ter uma saída rápida e definitiva, não era.</p>
+
+        <p>Obrigada por não me deixar desaparecer nele e por percorrê-lo comigo, me mostrando que não preciso atravessá-lo sozinha; por me ensinar que uma das maneiras de sair do labirinto é perdoando a si mesma, aprendendo a se amar e escolhendo o caminho da cura, em vez do fim.</p>
+
+        <p>Você me ensinou que, embora o mundo não seja uma fábrica de realização de desejos, ele ainda é um lugar onde a gente pode encontrar sentido. A vida não precisa ser apenas um "episódio ruim" sem fim. <em>"Fica mais fácil. A cada dia fica um pouco mais fácil. Mas você tem que fazer isso todos os dias. Essa é a parte difícil. Mas fica mais fácil"</em>. Obrigada por estar ao meu lado na parte difícil,  e por estar nos momentos bons também, me ajudando a entender que eu não sou as coisas ruins que aconteceram comigo e que é preciso ser responsável pela própria felicidade.</p>
+
+<p> Você não me ofereceu respostas prontas. Você me ofereceu presença e questionamentos. Quando eu vinha confusa, quebrada, sem saber explicar o que doía, você me escutava como quem acredita que, mesmo no caos, ainda existe algo que pode ser compreendido. E isso me salvou mais vezes do que você imagina.</p>
+
+        <p>A terapia não apagou a minha dor, mas me ensinou a atravessá-la sem me perder de mim. Aos poucos, você me ajudou a reconhecer partes minhas que eu tinha aprendido a rejeitar — a fragilidade, o medo, a necessidade de cuidado. E foi nesse reconhecimento que algo começou a mudar.</p>
+
+<p> Chegar ao fim deste ano é uma vitória silenciosa. Não é feita de grandes conquistas visíveis, mas de pequenas sobrevivências diárias. E muitas delas carregam a marca do nosso trabalho juntas. </p>
+
+        <p>Obrigada por não me reduzir a sintomas. Por não me apressar. Por me ver quando eu mesma não conseguia.</p>
+
+        <p>Sua paciência e humanidade foram o colo que nenhuma teoria poderia substituir. Que você saiba que o espaço que criou para mim foi um dos poucos lugares onde eu pude existir inteira. <br> — Também estou orgulhosa de mim, e te ver orgulhosa, me deixou feliz. </br> <strong> Engraçado, eu sempre odiei frases prontas, mas, talvez, em certos dias, elas  realmente fazem sentido. diferença. </strong></p>
+
+        <div class="assinatura">
+            Com carinho e gratidão,Kethelen.
+        </div>
+
+        <div class="footer-actions">
+            <button class="btn-capsula" onclick="mudarFrase('sentimento')">Sentimento</button>
+            <button class="btn-capsula" onclick="mudarFrase('aprendizado')">Aprendizado</button>
+            <button class="btn-capsula" onclick="mudarFrase('gratidao')">Desejo</button>
+            <div id="feedback" class="mensagem-final"></div>
+        </div>
+    </article>
+</div>
+
+<script>
+    // Gerador de Bokeh
+    const bokehContainer = document.getElementById('bokeh');
+    for (let i = 0; i < 30; i++) {
+        const luz = document.createElement('div');
+        luz.className = 'luz';
+        const tamanho = Math.random() * 50 + 20 + 'px';
+        luz.style.width = tamanho;
+        luz.style.height = tamanho;
+        luz.style.left = Math.random() * 100 + 'vw';
+        luz.style.setProperty('--d', Math.random() * 10 + 10 + 's');
+        luz.style.animationDelay = Math.random() * 10 + 's';
+        bokehContainer.appendChild(luz);
+    }
+
+    function abrirCarta() {
+        const intro = document.getElementById('intro');
+        const carta = document.getElementById('carta');
+        
+        intro.style.opacity = '0';
+        intro.style.transform = 'translateY(-100%)';
+        
+        setTimeout(() => {
+            intro.style.display = 'none';
+            carta.style.display = 'block';
+            setTimeout(() => {
+                carta.style.opacity = '1';
+                carta.style.transform = 'scale(1)';
+            }, 100);
+        }, 800);
+    }
+
+    const frases = {
+        sentimento: ["Paz por ser compreendida.", "Orgulho da nossa trajetória.", "Leveza para seguir."],
+        aprendizado: ["Eu sou a dona da minha história.", "O labirinto tem saída.", "A cura é um ato diário."],
+        gratidao: ["Que você continue transformando vidas.", "Obrigada por me ver de verdade.", "Que seu ano seja tão luz quanto você foi para mim."]
+    };
+
+    function mudarFrase(tipo) {
+        const msg = document.getElementById('feedback');
+        const lista = frases[tipo];
+        msg.style.opacity = '0';
+        setTimeout(() => {
+            msg.innerText = lista[Math.floor(Math.random() * lista.length)];
+            msg.style.opacity = '1';
+        }, 300);
+    }
+</script>
+
+</body>
+</html>
